@@ -1,85 +1,107 @@
-// Black Line Follower 
-int IR1=9;      //Right sensor
-int IR2=8;    //left Sensor
-// motor one
-int enA = 5;    //Right motor
-int MotorAip1=2;
-int MotorAip2=3;
-// motor two
-int enB = 6;    //Left motor
-int MotorBip1=4;
-int MotorBip2=7;
-int Power = 10;
-void setup() 
+int IRL;
+int IRR;
+int IRM;
+int inML1;
+int inMR1;
+int inML2;
+int inMR2;
+int enL;
+int enR;
+int ground=0;
+int line=0;
+long Timer ;
+int m=0;
+
+ void setup()
 {
-  // put your setup code here, to run once:
-  pinMode(enA, OUTPUT);
-  pinMode(enB, OUTPUT);
-  pinMode(IR1,INPUT);
-  pinMode(IR2,INPUT);
-  pinMode(MotorAip1,OUTPUT);
-  pinMode(MotorAip2,OUTPUT);
-  pinMode(MotorBip1,OUTPUT);
-  pinMode(MotorBip2,OUTPUT); 
+
+pinMode(enL,OUTPUT);
+pinMode(enR,OUTPUT);
+pinMode(inML1,OUTPUT);
+pinMode(inML2,OUTPUT);
+pinMode(inMR1,OUTPUT);
+pinMode(inMR2,OUTPUT);
+pinMode (IRL,INPUT);
+pinMode (IRR,INPUT);
+pinMode(IRM,INPUT);
+ground = digitalRead (IRR);
+if (ground ==1)line=0;
+else line =1;
+
 }
-void loop() 
-{
-   if(digitalRead(IR1)==LOW && digitalRead(IR2)==LOW) //IR will not glow on black line
-  {
-    //Stop both Motors
-    digitalWrite(MotorAip1,HIGH);
-    digitalWrite(MotorAip2,LOW);
-    digitalWrite(MotorBip1,HIGH);
-    digitalWrite(MotorBip2,LOW);
-    analogWrite (enA, 255);
-    analogWrite (enB, 255);
-  }
+void loop(){
 
-  else if(digitalRead(IR1)==HIGH && digitalRead(IR2)==HIGH)  //IR not on black line
-  {
-    //Move both the Motors
-    digitalWrite(MotorAip1,HIGH);
-    digitalWrite(MotorAip2,LOW);
-    digitalWrite(MotorBip1,HIGH);
-    digitalWrite(MotorBip2,LOW);
-    analogWrite (enA, 255);
-    analogWrite (enB, 255);
-  }
+if (moveForward){
+Forward();
+}
+else if (moveRight){
+Right();
+delay(100);
+}
+else if (moveLeft){
+Left();
+delay(100);
 
-  else if(digitalRead(IR1)==HIGH && digitalRead(IR2)==LOW)
-  {
-    //Tilt robot towards left by stopping the left wheel and moving the right one
-    digitalWrite(MotorAip1,HIGH);     
-    digitalWrite(MotorAip2,LOW);
-    digitalWrite(MotorBip1,LOW);
-    digitalWrite(MotorBip2,HIGH);
-    analogWrite (enA, 255);
-    analogWrite (enB, 150);
-    delay(100);
-  }
+}
+ if (digitalRead(IRM)==ground&&m==0){
+    m=1;
 
-  else if(digitalRead(IR1)==LOW && digitalRead(IR2)==HIGH)
-  {
-    //Tilt robot towards right by stopping the right wheel and moving the left one
-     digitalWrite(MotorAip1,LOW);     // If I want to turn right then the speed of the right wheel should be less than that of the left wheel, here, let a be the right wheel
-    digitalWrite(MotorAip2,HIGH);
-    digitalWrite(MotorBip1, HIGH);
-    digitalWrite(MotorBip2,LOW);
-    analogWrite (enA, 150);
-    analogWrite (enB, 255);
-    delay(100);
-  }
+}
+if (stop){
+Stop();
+}
+if(digitalRead (IRM)==line)m=0;
+}
 
-  else
-  {
-    //Stop both the motors
-    digitalWrite(MotorAip1,LOW);
-    digitalWrite(MotorAip2,LOW);
-    digitalWrite(MotorBip1,LOW);
-    digitalWrite(MotorBip2,LOW);
-    analogWrite (enA, 0);
-    analogWrite (enB, 0);
-  }
+boolean stop(){
+  return digitalRead(IRM)==ground;
+}
 
-  Serial.println(digitalRead(IR1));
+boolean moveLeft(){
+  return digitalRead (IRR)==ground &&digitalRead (IRL)==line;
+}
+
+boolean moveRight(){
+  return digitalRead (IRR)==line &&digitalRead (IRL)==ground;
+}
+
+boolean moveForward(){
+  return digitalRead (IRR)==ground &&digitalRead (IRL==ground);
+}
+
+void Right(){
+digitalWrite (inMR1,HIGH);
+digitalWrite (inMR2,LOW);
+digitalWrite (inML1,HIGH);
+digitalWrite (inML2,LOW);
+analogWrite (enL,255);
+analogWrite(enR,100);
+
+}
+void Left(){
+digitalWrite (inMR1,HIGH);
+digitalWrite (inMR2,LOW);
+digitalWrite (inML1,HIGH);
+digitalWrite (inML2,LOW);
+analogWrite (enL,100);
+analogWrite(enR,255);
+
+}
+void Forward(){
+digitalWrite (inMR1,HIGH);
+digitalWrite (inMR2,LOW);
+digitalWrite (inML1,HIGH);
+digitalWrite (inML2,LOW);
+analogWrite (enL,255);
+analogWrite(enR,255);
+
+}
+void Stop(){
+digitalWrite (inMR1,HIGH);
+digitalWrite (inMR2,LOW);
+digitalWrite (inML1,HIGH);
+digitalWrite (inML2,LOW);
+analogWrite (enL,0);
+analogWrite(enR,0);
+
 }
