@@ -1,0 +1,5 @@
+{
+    "arduino.path": "",
+    "arduino.enableUSBDetection": true,
+    "arduino.useArduinoCli": false
+}
