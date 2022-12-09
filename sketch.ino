@@ -1,3 +1,6 @@
+#include <LiquidCrystal.h>
+LiquidCrystal Lcd = {1,2,3,4,5,6}; // can be modified
+
 int IRL;
 int IRR;
 int IRM;
@@ -14,41 +17,58 @@ int m=0;
 
  void setup()
 {
+  Lcd.begin(16,2);
+  //print start one time only 
+  Lcd.println("START");
 
-pinMode(enL,OUTPUT);
-pinMode(enR,OUTPUT);
-pinMode(inML1,OUTPUT);
-pinMode(inML2,OUTPUT);
-pinMode(inMR1,OUTPUT);
-pinMode(inMR2,OUTPUT);
-pinMode (IRL,INPUT);
-pinMode (IRR,INPUT);
-pinMode(IRM,INPUT);
-ground = digitalRead (IRR);
-if (ground ==1)line=0;
-else line =1;
-
+  pinMode(enL,OUTPUT);
+  pinMode(enR,OUTPUT);
+  pinMode(inML1,OUTPUT);
+  pinMode(inML2,OUTPUT);
+  pinMode(inMR1,OUTPUT);
+  pinMode(inMR2,OUTPUT);
+  pinMode (IRL,INPUT);
+  pinMode (IRR,INPUT);
+  pinMode(IRM,INPUT);
+  ground = digitalRead (IRR);
+  if (ground == 1)
+    line=0;
+  else 
+    line = 1;
 }
+
 void loop(){
+Lcd.clear();
+// Lcd.setCursor(__ , __); // لسه متفقناش علا مكان الاسم 
+Lcd.println("CSM");
+Lcd.setCursor(0,0);
 
-if (moveForward){
-Forward();
+if (moveForward)
+{
+  Lcd.println("STRAIGHT");
+  Forward();
 }
-else if (moveRight){
-Right();
-delay(100);
+else if (moveRight)
+{
+  Lcd.println("RIGHT");
+  Right();
+  delay(100);
 }
-else if (moveLeft){
-Left();
-delay(100);
+else if (moveLeft)
+{
+  Lcd.println("LEFT");
+  Left();
+  delay(100);
 
 }
  if (digitalRead(IRM)==ground&&m==0){
     m=1;
 
 }
-if (stop){
-Stop();
+if (stop)
+{
+  Lcd.println("END");
+  Stop();
 }
 if(digitalRead (IRM)==line)m=0;
 }
@@ -66,7 +86,7 @@ boolean moveRight(){
 }
 
 boolean moveForward(){
-  return digitalRead (IRR)==ground &&digitalRead (IRL==ground);
+  return digitalRead(IRR) == ground && digitalRead(IRL == ground);
 }
 
 void Right(){

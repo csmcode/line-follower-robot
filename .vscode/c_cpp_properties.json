@@ -19,7 +19,8 @@
                 "/workspaces/line-follower-robot/arduino-1.8.19/hardware/arduino/avr/variants/standard",
                 "/workspaces/line-follower-robot/arduino-1.8.19/hardware/tools/avr/lib/gcc/avr/7.3.0/include",
                 "/workspaces/line-follower-robot/arduino-1.8.19/hardware/tools/avr/lib/gcc/avr/7.3.0/include-fixed",
-                "/workspaces/line-follower-robot/arduino-1.8.19/hardware/tools/avr/avr/include"
+                "/workspaces/line-follower-robot/arduino-1.8.19/hardware/tools/avr/avr/include",
+                "${workspaceFolder}/arduino-1.8.19/libraries/LiquidCrystal/src"
             ],
             "forcedInclude": [
                 "/workspaces/line-follower-robot/arduino-1.8.19/hardware/arduino/avr/cores/arduino/Arduino.h"
@@ -531,6 +532,17 @@
                 "__BUILTIN_AVR_FMUL=1",
                 "USBCON"
             ]
+        },
+        {
+            "name": "Arduino",
+            "includePath": [
+                "${workspaceFolder}/**"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/clang",
+            "cStandard": "c17",
+            "cppStandard": "c++14",
+            "intelliSenseMode": "windows-clang-x64"
         }
     ]
 }
