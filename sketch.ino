@@ -1,3 +1,6 @@
+#include <LiquidCrystal.h>
+LiquidCrystal Lcd = {1,2,3,4,5,6}; // can be modified
+
 int irLeft = 8;
 int irRight = 9;
 int irMiddle;
@@ -12,6 +15,9 @@ int ground = 0, line = 1;
 
 void setup()
 {
+  Lcd.begin(16, 2);
+  Lcd.println("START");
+  
   pinMode(enLeft, OUTPUT);
   pinMode(enRight, OUTPUT);
   pinMode(leftMotorPin1, OUTPUT);
@@ -37,21 +43,29 @@ void setup()
 
 void loop()
 {
+  Lcd.clear();
+  // Lcd.setCursor(__ , __); // لسه متفقناش علا مكان الاسم 
+  Lcd.println("CSM");
+  Lcd.setCursor(0,0);
 
   if (moveForward)
   {
+    Lcd.println("STRAIGHT");
     Forward();
   }
   else if (moveRight)
   {
+    Lcd.println("RIGHT");
     Right();
   }
   else if (moveLeft)
   {
+    Lcd.println("LEFT");
     Left();
   }
   else if (stop)
   {
+    Lcd.println("END");
     Stop();
   }
   
@@ -110,7 +124,7 @@ void Stop()
   digitalWrite(rightMotorPin2, LOW);
   digitalWrite(leftMotorPin1, LOW);
   digitalWrite(leftMotorPin2, LOW);
-  analogWrite(enLeft,0);
-  analogWrite(enRight,0);
+  analogWrite(enLeft, 0);
+  analogWrite(enRight, 0);
 
 }
