@@ -2,7 +2,8 @@
     "arduino.path": "",
     "arduino.enableUSBDetection": true,
     "arduino.useArduinoCli": false,
-    "workbench.experimental.cloudChanges.autoStore": "onShutdown",
-    "git.autofetch": "all",
-    "git.fetchOnPull": true
+    "workbench.experimental.cloudChanges.autoStore": "off",
+    "git.autofetch": true,
+    "git.fetchOnPull": false,
+    "git.autofetchPeriod": 60
 }
