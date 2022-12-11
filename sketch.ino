@@ -3,7 +3,8 @@ LiquidCrystal Lcd = {1,2,3,4,5,6}; // can be modified
 
 int irLeft = 8;
 int irRight = 9;
-int irMiddle;
+int irFront;
+int irBehind;
 int leftMotorPin1 = 4;
 int leftMotorPin2 = 7;
 int enLeft = 6;
@@ -26,7 +27,8 @@ void setup()
   pinMode(rightMotorPin2, OUTPUT);
   pinMode(irLeft, INPUT);
   pinMode(irRight, INPUT);
-  pinMode(irMiddle, INPUT);
+  pinMode(irFront, INPUT);
+  pinMode(irBehind, INPUT);
   pinMode(power, OUTPUT);
   digitalWrite(power, HIGH);
   ground = digitalRead(irRight);
@@ -73,7 +75,7 @@ void loop()
 
 boolean stop()
 {
-  return digitalRead(irMiddle) == ground;
+  return digitalRead(irLeft) == ground && digitalRead(irRight) == ground && digitalRead(irFront) == ground && digitalRead(irBehind) == ground;
 }
 
 boolean moveLeft()
