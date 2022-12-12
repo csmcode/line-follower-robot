@@ -14,6 +14,8 @@ int enRight = 5;
 int power = 10;
 int counter_B = 0;
 int counter_C = 0;
+int ground;
+int line;
 
 void setup()
 {
@@ -33,6 +35,8 @@ void setup()
   pinMode(power, OUTPUT);
   digitalWrite(power, HIGH);
   
+  ground = digitalRead(irLeft);
+  line != ground;
 
 }
 
@@ -42,11 +46,11 @@ void loop()
   // Lcd.setCursor(__ , __); // لسه متفقناش علا مكان الاسم 
   Lcd.println("CSM");
   Lcd.setCursor(0,0);
-  if ((digitalRead(irRight) == 1 && digitalRead(irLeft) == 1 && digitalRead(irFront) == 1 && digitalRead(irBehind) == 1))
+  if ((digitalRead(irRight) == line && digitalRead(irLeft) == line && digitalRead(irFront) == line && digitalRead(irBehind) == line))
   {
-    Counter_B ++;
+    counter_B ++;
   }
-  if ((digitalRead(irRight) == 0 && digitalRead(irLeft) == 0 && digitalRead(irFront) == 0 && digitalRead(irBehind) == 1))
+  if ((digitalRead(irRight) == ground && digitalRead(irLeft) == ground && digitalRead(irFront) == ground && digitalRead(irBehind) == line))
   {
     counter_C ++;
   }  
@@ -116,25 +120,27 @@ void loop()
 
 boolean stop()
 {
-  return digitalRead(irLeft) == 0 && digitalRead(irRight) == 0 && digitalRead(irFront) == 0 && digitalRead(irBehind) == 0;
+  return digitalRead(irFront) == ground && digitalRead(irBehind) == ground;
 }
 
 boolean moveLeft()
 {
-  return digitalRead(irRight) == 0 && digitalRead(irLeft) == 1;
+  return digitalRead(irRight) == ground && digitalRead(irLeft) == line;
 }
 
 boolean moveRight()
 {
-  return digitalRead(irRight) == 1 && digitalRead(irLeft) == 0;
+  return digitalRead(irRight) == line && digitalRead(irLeft) == ground;
 }
 
 boolean moveForward()
 {
-  return (digitalRead(irRight) == 0 && digitalRead(irLeft) == 0) ||  (digitalRead(irRight) == 1 && digitalRead(irLeft) == 1 && digitalRead(irFront) == 1 && digitalRead(irBehind) == 1) ;
+  return (digitalRead(irFront) == ground && digitalRead(irBehind) == line) ||  (digitalRead(irFront) == line && digitalRead(irBehind) == line) ;
+                        // for gap                                                                 for The intersection of two lines           
 }
 
-void Right(){
+void Right()
+{
   digitalWrite(rightMotorPin1, LOW);
   digitalWrite(rightMotorPin2, HIGH);
   digitalWrite(leftMotorPin1, HIGH);
@@ -143,7 +149,8 @@ void Right(){
   analogWrite(enRight, 150);
 
 }
-void Left(){
+void Left()
+{
   digitalWrite(rightMotorPin1, HIGH);
   digitalWrite(rightMotorPin2, LOW);
   digitalWrite(leftMotorPin1, LOW);
