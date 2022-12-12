@@ -12,7 +12,7 @@ int rightMotorPin1 = 2;
 int rightMotorPin2 = 3;
 int enRight = 5;
 int power = 10;
-int counter_A = 0;
+int counter_B = 0;
 int counter_C = 0;
 
 void setup()
@@ -71,12 +71,12 @@ void loop()
     Lcd.println("RIGHT");
     Right();
 
-    if (counter_A == 5)
+    if (counter_B == 5)
     {
       Lcd.println("B");            
     }
          
-    if (counter_c == 2)
+    if (counter_C == 2)
     {
       Lcd.println("C");            
     }
@@ -86,12 +86,12 @@ void loop()
     Lcd.println("LEFT");
     Left();
     
-    if (counter_A == 5)
+    if (counter_B == 5)
     {
       Lcd.println("B");            
     }
          
-    if (counter_c == 2)
+    if (counter_C == 2)
     {
       Lcd.println("C");            
     }
@@ -101,12 +101,12 @@ void loop()
     Lcd.println("END");
     Stop();
     
-    if (counter_A == 5)
+    if (counter_B == 5)
     {
       Lcd.println("B");            
     }
          
-    if (counter_c == 2)
+    if (counter_C == 2)
     {
       Lcd.println("C");            
     }
