@@ -1,10 +1,10 @@
 #include <LiquidCrystal.h>
 LiquidCrystal Lcd = {1,2,3,4,5,6}; // can be modified
 
-int irLeft = 8;
-int irRight = 9;
-int irFront;
-int irBehind;
+int irLeft = A0;
+int irRight = A1;
+int irFront = A2;
+int irBehind = A3;
 int leftMotorPin1 = 4;
 int leftMotorPin2 = 7;
 int enLeft = 6;
@@ -12,7 +12,8 @@ int rightMotorPin1 = 2;
 int rightMotorPin2 = 3;
 int enRight = 5;
 int power = 10;
-int ground = 0, line = 1;
+int counter_A = 0;
+int counter_C = 0;
 
 void setup()
 {
@@ -31,15 +32,7 @@ void setup()
   pinMode(irBehind, INPUT);
   pinMode(power, OUTPUT);
   digitalWrite(power, HIGH);
-  ground = digitalRead(irRight);
-  if (ground == 1)
-  {
-    line = 0;
-  }
-  else
-  {
-    line = 1;
-  }
+  
 
 }
 
@@ -49,48 +42,96 @@ void loop()
   // Lcd.setCursor(__ , __); // لسه متفقناش علا مكان الاسم 
   Lcd.println("CSM");
   Lcd.setCursor(0,0);
+  if ((digitalRead(irRight) == 1 && digitalRead(irLeft) == 1 && digitalRead(irFront) == 1 && digitalRead(irBehind) == 1))
+  {
+    Counter_B ++;
+  }
+  if ((digitalRead(irRight) == 0 && digitalRead(irLeft) == 0 && digitalRead(irFront) == 0 && digitalRead(irBehind) == 1))
+  {
+    counter_C ++;
+  }  
 
   if (moveForward)
   {
     Lcd.println("STRAIGHT");
     Forward();
+    
+    if ("counter_B == 5")
+    {
+      Lcd.println("B");            
+    }
+         
+    if ("counter_C == 2")
+    {
+      Lcd.println("C");            
+    }
   }
   else if (moveRight)
   {
     Lcd.println("RIGHT");
     Right();
+
+    if ("counter_A == 5")
+    {
+      Lcd.println("A");            
+    }
+         
+    if ("counter_c == 2")
+    {
+      Lcd.println("C");            
+    }
   }
   else if (moveLeft)
   {
     Lcd.println("LEFT");
     Left();
+    
+    if ("counter_A == 5")
+    {
+      Lcd.println("A");            
+    }
+         
+    if ("counter_c == 2")
+    {
+      Lcd.println("C");            
+    }
   }
   else if (stop)
   {
     Lcd.println("END");
     Stop();
+    
+    if ("counter_A == 5")
+    {
+      Lcd.println("A");            
+    }
+         
+    if ("counter_c == 2")
+    {
+      Lcd.println("C");            
+    }
   }
   
 }
 
 boolean stop()
 {
-  return digitalRead(irLeft) == ground && digitalRead(irRight) == ground && digitalRead(irFront) == ground && digitalRead(irBehind) == ground;
+  return digitalRead(irLeft) == 0 && digitalRead(irRight) == 0 && digitalRead(irFront) == 0 && digitalRead(irBehind) == 0;
 }
 
 boolean moveLeft()
 {
-  return digitalRead(irRight) == ground && digitalRead(irLeft) == line;
+  return digitalRead(irRight) == 0 && digitalRead(irLeft) == 1;
 }
 
 boolean moveRight()
 {
-  return digitalRead(irRight) == line && digitalRead(irLeft) == ground;
+  return digitalRead(irRight) == 1 && digitalRead(irLeft) == 0;
 }
 
 boolean moveForward()
 {
-  return digitalRead(irRight) == ground && digitalRead(irLeft) == ground;
+  return (digitalRead(irRight) == 0 && digitalRead(irLeft) == 0) ||  (digitalRead(irRight) == 1 && digitalRead(irLeft) == 1 && digitalRead(irFront) == 1 && digitalRead(irBehind) == 1) ;
 }
 
 void Right(){
