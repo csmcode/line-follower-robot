@@ -12,8 +12,8 @@ int rightMotorPin1 = 2;
 int rightMotorPin2 = 3;
 int enRight = 5;
 int power = 10;
-int counter_B = 0;
-int counter_C = 0;
+int crossCounter = 0;
+int gapCounter = 0;
 int ground;
 int line;
 
@@ -46,74 +46,51 @@ void loop()
   // Lcd.setCursor(__ , __); // لسه متفقناش علا مكان الاسم 
   Lcd.println("CSM");
   Lcd.setCursor(0,0);
-  if ((digitalRead(irRight) == line && digitalRead(irLeft) == line && digitalRead(irFront) == line && digitalRead(irBehind) == line))
+  if (cross)
   {
-    counter_B ++;
+    crossCounter ++;
   }
-  if ((digitalRead(irRight) == ground && digitalRead(irLeft) == ground && digitalRead(irFront) == ground && digitalRead(irBehind) == line))
+  if (gap)
   {
-    counter_C ++;
+    gapCounter ++;
   }  
 
+  if (crossCounter == 5)
+    {
+      Lcd.println("B"); 
+      delay(10);
+      // we might make it written for a long period of time 
+    }
+         
+    if (gapCounter == 2)
+    {
+      Lcd.println("C");    
+      delay(10);        
+    }
+    
   if (moveForward)
   {
     Lcd.println("STRAIGHT");
     Forward();
-    
-    if (counter_B == 5)
-    {
-      Lcd.println("B");            
-    }
-         
-    if (counter_C == 2)
-    {
-      Lcd.println("C");            
-    }
   }
   else if (moveRight)
   {
     Lcd.println("RIGHT");
     Right();
 
-    if (counter_B == 5)
-    {
-      Lcd.println("B");            
-    }
-         
-    if (counter_C == 2)
-    {
-      Lcd.println("C");            
-    }
   }
   else if (moveLeft)
   {
     Lcd.println("LEFT");
     Left();
     
-    if (counter_B == 5)
-    {
-      Lcd.println("B");            
-    }
-         
-    if (counter_C == 2)
-    {
-      Lcd.println("C");            
-    }
+    
   }
   else if (stop)
   {
     Lcd.println("END");
     Stop();
     
-    if (counter_B == 5)
-    {
-      Lcd.println("B");            
-    }
-         
-    if (counter_C == 2)
-    {
-      Lcd.println("C");            
-    }
   }
   
 }
@@ -135,8 +112,16 @@ boolean moveRight()
 
 boolean moveForward()
 {
-  return (digitalRead(irFront) == ground && digitalRead(irBehind) == line) ||  (digitalRead(irFront) == line && digitalRead(irBehind) == line) ;
-                        // for gap                                                                 for The intersection of two lines           
+    return digitalRead(irFront) == line || digitalRead(irBehind) == line ;
+    // for gap for The intersection of two lines           
+}
+boolean cross()
+{
+    return digitalRead(irRight) == line && digitalRead(irLeft) == line && digitalRead(irFront) == line ;
+}
+boolean gap()
+{
+    return digitalRead(irRight) == ground && digitalRead(irLeft) == ground && digitalRead(irFront) == ground ;
 }
 
 void Right()
