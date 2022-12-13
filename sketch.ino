@@ -1,5 +1,5 @@
 #include <LiquidCrystal.h>
-LiquidCrystal Lcd = {1,2,3,4,5,6}; // can be modified
+LiquidCrystal Lcd = {1, 2, 3, 4, 5, 6}; // can be modified
 
 int irLeft = A0;
 int irRight = A1;
@@ -36,95 +36,93 @@ void setup()
   digitalWrite(power, HIGH);
   
   ground = digitalRead(irLeft);
-  line != ground;
-
+  line = !ground;
 }
 
 void loop()
 {
-  Lcd.clear();
   // Lcd.setCursor(__ , __); // لسه متفقناش علا مكان الاسم 
   Lcd.println("CSM");
-  Lcd.setCursor(0,0);
+
   if (cross)
   {
-    crossCounter ++;
+    crossCounter++;
   }
+
   if (gap)
   {
-    gapCounter ++;
-  }  
+    gapCounter++;
+  }
 
+  Lcd.setCursor(0,0); // will be modified later
   if (crossCounter == 5)
-    {
-      Lcd.println("B"); 
-      delay(10);
-      // we might make it written for a long period of time 
-    }
-         
-    if (gapCounter == 2)
-    {
-      Lcd.println("C");    
-      delay(10);        
-    }
-    
-  
-  if (moveRight)
+  {
+    Lcd.println("B"); 
+  }
+        
+  if (gapCounter == 2)
+  {
+    Lcd.println("C");    
+  }
+
+  Lcd.setCursor(0,0); // will be modified later
+  if (sensingRight)
   {
     Lcd.println("RIGHT");
-    Right();
+    goRight();
 
   }
-  else if (moveLeft)
+
+  else if (sensingLeft)
   {
     Lcd.println("LEFT");
-    Left();
-    
-    
+    goLeft();  
   }
-  else if (moveForward)
+
+  else if (sensingStraight)
   {
     Lcd.println("STRAIGHT");
-    Forward();
+    goForward();
   }
-  else if (stop)
+
+  else if (sensingNothing)
   {
     Lcd.println("END");
-    Stop();
-  }
-  
-  
+    stop();
+  }  
 }
 
-boolean stop()
+boolean sensingNothing()
 {
   return digitalRead(irFront) == ground && digitalRead(irBehind) == ground;
 }
 
-boolean moveLeft()
+boolean sensingLeft()
 {
   return digitalRead(irRight) == ground && digitalRead(irLeft) == line;
 }
 
-boolean moveRight()
+boolean sensingRight()
 {
   return digitalRead(irRight) == line && digitalRead(irLeft) == ground;
 }
 
-boolean moveForward()
+boolean sensingStraight()
 {
-    return digitalRead(irFront) == line || digitalRead(irBehind) == line ;
-}
-boolean cross()
-{
-    return digitalRead(irRight) == line && digitalRead(irLeft) == line && digitalRead(irFront) == line ;
-}
-boolean gap()
-{
-    return digitalRead(irRight) == ground && digitalRead(irLeft) == ground && digitalRead(irFront) == ground ;
+  return digitalRead(irFront) == line || digitalRead(irBehind) == line ;
 }
 
-void Right()
+boolean cross()
+{
+  return digitalRead(irRight) == line && digitalRead(irLeft) == line && digitalRead(irFront) == line;
+}
+
+boolean gap()
+{
+  return digitalRead(irRight) == ground && digitalRead(irLeft) == ground && digitalRead(irFront) == ground;
+}
+
+void goRight()
 {
   digitalWrite(rightMotorPin1, LOW);
   digitalWrite(rightMotorPin2, HIGH);
@@ -134,7 +132,7 @@ void Right()
   analogWrite(enRight, 150);
 
 }
-void Left()
+void goLeft()
 {
   digitalWrite(rightMotorPin1, HIGH);
   digitalWrite(rightMotorPin2, LOW);
@@ -144,7 +142,7 @@ void Left()
   analogWrite(enRight, 255);
 
 }
-void Forward()
+void goForward()
 {
   digitalWrite(rightMotorPin1, HIGH);
   digitalWrite(rightMotorPin2, LOW);
@@ -153,7 +151,7 @@ void Forward()
   analogWrite(enLeft, 255);
   analogWrite(enRight, 255);
 }
-void Stop()
+void stop()
 {
   digitalWrite(rightMotorPin1, LOW);
   digitalWrite(rightMotorPin2, LOW);
