@@ -114,7 +114,6 @@ boolean moveRight()
 boolean moveForward()
 {
     return digitalRead(irFront) == line || digitalRead(irBehind) == line ;
-    // for gap for The intersection of two lines           
 }
 boolean cross()
 {
