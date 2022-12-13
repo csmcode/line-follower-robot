@@ -68,12 +68,8 @@ void loop()
       delay(10);        
     }
     
-  if (moveForward)
-  {
-    Lcd.println("STRAIGHT");
-    Forward();
-  }
-  else if (moveRight)
+  
+  if (moveRight)
   {
     Lcd.println("RIGHT");
     Right();
@@ -86,12 +82,17 @@ void loop()
     
     
   }
+  else if (moveForward)
+  {
+    Lcd.println("STRAIGHT");
+    Forward();
+  }
   else if (stop)
   {
     Lcd.println("END");
     Stop();
-    
   }
+  
   
 }
 
