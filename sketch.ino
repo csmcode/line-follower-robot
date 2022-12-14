@@ -1,5 +1,5 @@
 #include <LiquidCrystal.h>
-LiquidCrystal Lcd = {1, 2, 3, 4, 5, 6}; // can be modified
+LiquidCrystal lcd = {1, 2, 3, 4, 5, 6}; // can be modified
 
 int irLeft = A0;
 int irRight = A1;
@@ -19,8 +19,9 @@ int line;
 
 void setup()
 {
-  Lcd.begin(16, 2);
-  Lcd.println("START");
+  lcd.begin(16, 2);
+  lcd.setCursor(3, 1);
+  lcd.println("START");
   
   pinMode(enLeft, OUTPUT);
   pinMode(enRight, OUTPUT);
@@ -41,8 +42,9 @@ void setup()
 
 void loop()
 {
-  // Lcd.setCursor(__ , __); // لسه متفقناش علا مكان الاسم 
-  Lcd.println("CSM");
+  lcd.clear();
+  lcd.setCursor(6, 0);
+  lcd.println("CSM");
 
   if (cross)
   {
@@ -54,40 +56,40 @@ void loop()
     gapCounter++;
   }
 
-  Lcd.setCursor(0,0); // will be modified later
+  lcd.setCursor(13, 1);
   if (crossCounter == 5)
   {
-    Lcd.println("B"); 
+    lcd.println("B"); 
   }
         
   if (gapCounter == 2)
   {
-    Lcd.println("C");    
+    lcd.println("C");    
   }
 
-  Lcd.setCursor(0,0); // will be modified later
+  lcd.setCursor(3, 1);
   if (sensingRight)
   {
-    Lcd.println("RIGHT");
+    lcd.println("RIGHT");
     goRight();
 
   }
 
   else if (sensingLeft)
   {
-    Lcd.println("LEFT");
+    lcd.println("LEFT");
     goLeft();  
   }
 
   else if (sensingStraight)
   {
-    Lcd.println("STRAIGHT");
+    lcd.println("STRAIGHT");
     goForward();
   }
 
   else if (sensingNothing)
   {
-    Lcd.println("END");
+    lcd.println("END");
     stop();
   }  
 }
