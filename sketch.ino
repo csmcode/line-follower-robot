@@ -1,22 +1,25 @@
 #include <LiquidCrystal.h>
-LiquidCrystal lcd = {1, 2, 3, 4, 5, 6}; // can be modified
+LiquidCrystal lcd = {8, 13, 12, 11, 10, 9}; // can be modified
 
-//sensors
-int irLeft = A0;
-int irRight = A1;
-int irFront = A2;
-int irBehind = A3;
-//left motor
-int leftMotorPin1 = 4; 
-int leftMotorPin2 = 7;
-int enLeft = 6;
-//right motor
-int rightMotorPin1 = 2;
-int rightMotorPin2 = 3;
-int enRight = 5;
+// sensors
+int irLeft = A3;
+int irRight = A5;
+int irFront = A4;
+int irBehind = A2;
+// left motor
+int leftMotorPin1 = 2; 
+int leftMotorPin2 = 3;
+int enLeft = 4;
+// right motor
+int rightMotorPin1 = 5;
+int rightMotorPin2 = 6;
+int enRight = 7;
+
 int power = 10;
+// counters
 int crossCounter = 0;
 int gapCounter = 0;
+// 
 int ground;
 int line;
 
@@ -24,7 +27,6 @@ void setup()
 {
   lcd.begin(16, 2);
   lcd.setCursor(3, 1);
-  // Print a message to the LCD.
   lcd.println("START");
   
   // initialize the inputs and outputs
@@ -41,6 +43,7 @@ void setup()
   pinMode(power, OUTPUT);
   digitalWrite(power, HIGH);
   
+  // auto detect ground
   ground = digitalRead(irLeft);
   line = !ground;
 }
@@ -49,6 +52,7 @@ void loop()
 {
   lcd.clear();
   lcd.setCursor(6, 0);
+  // Team name
   lcd.println("CSM");
 
   if (cross)
@@ -61,6 +65,7 @@ void loop()
     gapCounter++;
   }
 
+  // for badge
   lcd.setCursor(13, 1);
   if (crossCounter == 5)
   {
@@ -72,6 +77,7 @@ void loop()
     lcd.println("C");    
   }
 
+  // for movement
   lcd.setCursor(3, 1);
   if (sensingRight)
   {
@@ -101,43 +107,43 @@ void loop()
 
 boolean sensingNothing()
 {
-  //stop when both sensors read 0
+  // stop when both sensors read ground
   return digitalRead(irFront) == ground && digitalRead(irBehind) == ground;
 }
 
 boolean sensingLeft()
 {
-  //move left when left sensor read 1 
+  // move left when left sensor read line 
   return digitalRead(irRight) == ground && digitalRead(irLeft) == line;
 }
 
 boolean sensingRight()
 {
-  //move right when right sensor read 1
+  // move right when right sensor read line
   return digitalRead(irRight) == line && digitalRead(irLeft) == ground;
 }
 
 boolean sensingStraight()
 {
-  // move forward when both sensors read 1
+  // move forward when either of sensors read line
   return digitalRead(irFront) == line || digitalRead(irBehind) == line ;
 }
 
 boolean cross()
 {
-  //return true when all sesnors read 1 (a cross found)
+  // return true when all sesnors read line (a cross found)
   return digitalRead(irRight) == line && digitalRead(irLeft) == line && digitalRead(irFront) == line;
 }
 
 boolean gap()
 {
-  //return ture when all sensors read 0 (a gap found)
+  // return ture when all sensors read ground (a gap found)
   return digitalRead(irRight) == ground && digitalRead(irLeft) == ground && digitalRead(irFront) == ground;
 }
 
 void goRight()
 {
-  //Tilt robot towards right by stopping the right wheel and moving the left one
+  // Tilt robot towards right by stopping the right wheel and moving the left one
   digitalWrite(rightMotorPin1, LOW);
   digitalWrite(rightMotorPin2, HIGH);
   digitalWrite(leftMotorPin1, HIGH);
@@ -148,7 +154,7 @@ void goRight()
 }
 void goLeft()
 {
-  //Tilt robot towards left by stopping the left wheel and moving the right one
+  // Tilt robot towards left by stopping the left wheel and moving the right one
   digitalWrite(rightMotorPin1, HIGH);
   digitalWrite(rightMotorPin2, LOW);
   digitalWrite(leftMotorPin1, LOW);
@@ -159,7 +165,7 @@ void goLeft()
 }
 void goForward()
 {
-  //Move both the Motors
+  // Move both the Motors
   digitalWrite(rightMotorPin1, HIGH);
   digitalWrite(rightMotorPin2, LOW);
   digitalWrite(leftMotorPin1, HIGH);
@@ -169,7 +175,7 @@ void goForward()
 }
 void stop()
 {
-  //Stop both the motors
+  // Stop both the motors
   digitalWrite(rightMotorPin1, LOW);
   digitalWrite(rightMotorPin2, LOW);
   digitalWrite(leftMotorPin1, LOW);
