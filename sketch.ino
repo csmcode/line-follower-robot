@@ -1,5 +1,5 @@
 #include <LiquidCrystal.h>
-LiquidCrystal lcd = {8, 13, 12, 11, 10, 9}; // can be modified
+LiquidCrystal lcd = {8, 13, 12, 11, 10, 9}; 
 
 // sensors
 int irLeft = A3;
@@ -58,11 +58,14 @@ void loop()
   if (cross)
   {
     crossCounter++;
+    delay(100); //changeable
   }
 
   if (gap)
   {
     gapCounter++;
+    delay(100); //changeable
+
   }
 
   // for badge
