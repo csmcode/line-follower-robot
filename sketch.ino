@@ -14,23 +14,22 @@ int enLeft = 4;
 int rightMotorPin1 = 5;
 int rightMotorPin2 = 6;
 int enRight = 7;
-
-int power = 10;
 // counters
 int max = 0 ;
 int straightCounter = 0 ;
 int crossCounter = 0;
 int gapCounter = 0;
-// 
+// instead of HIGH and LOW
 int ground;
 int line;
+// for badge A
+bool isMaximum = false;
 
 void setup()
 {
   lcd.begin(16, 2);
   lcd.setCursor(3, 1);
-  lcd.println("START");
-  
+  lcd.print("START");
   // initialize the inputs and outputs
   pinMode(enLeft, OUTPUT);
   pinMode(enRight, OUTPUT);
@@ -41,10 +40,7 @@ void setup()
   pinMode(irLeft, INPUT);
   pinMode(irRight, INPUT);
   pinMode(irFront, INPUT);
-  pinMode(irBehind, INPUT);
-  pinMode(power, OUTPUT);
-  digitalWrite(power, HIGH);
-  
+  pinMode(irBehind, INPUT);  
   // auto detect ground
   ground = digitalRead(irLeft);
   line = !ground;
@@ -52,62 +48,18 @@ void setup()
 
 void loop()
 {
-  lcd.clear();
-  lcd.setCursor(6, 0);
   // Team name
-  lcd.println("CSM");
-
-  if (cross)
-  {
-    crossCounter++;
-    delay(100); //changeable
-  }
-
-  if (gap)
-  {
-    gapCounter++;
-    delay(100); //changeable
-
-  }
-
-  // for badge
+  lcd.setCursor(6, 0);
+  lcd.print("CSM");
+  // helpful for printing B and C
+  countCross();
+  countGap();
+  // badges
   lcd.setCursor(13, 1);
-  if (crossCounter == 5)
-  {
-    lcd.println("B"); 
-  }
-        
-  if (gapCounter == 2)
-  {
-    lcd.println("C");    
-  }
-
-  // for movement
+  printBadges();
+  // movement
   lcd.setCursor(3, 1);
-  if (sensingRight)
-  {
-    lcd.println("RIGHT");
-    goRight();
-
-  }
-
-  else if (sensingLeft)
-  {
-    lcd.println("LEFT");
-    goLeft();  
-  }
-
-  else if (sensingStraight)
-  {
-    lcd.println("STRAIGHT");
-    goForward();
-  }
-
-  else if (sensingNothing)
-  {
-    lcd.println("END");
-    stop();
-  }  
+  moveTheRobot();
 }
 
 boolean sensingNothing()
@@ -146,9 +98,57 @@ boolean gap()
   return digitalRead(irRight) == ground && digitalRead(irLeft) == ground && digitalRead(irFront) == ground;
 }
 
+void countCross()
+{
+  if (cross)
+  {
+    crossCounter++;
+    delay(100); //changeable
+  }
+}
+
+void countGap()
+{
+  if (gap)
+  {
+    gapCounter++;
+    delay(100); //changeable
+  }
+}
+
+void countStraight()
+{
+  straightCounter++;
+  delay(10);
+  if (straightCounter >= max)
+  {
+    max = straightCounter ;
+  }
+}
+
+void printBadges()
+{
+  if (crossCounter == 5)
+  {
+    lcd.print("B"); 
+  }
+        
+  if (gapCounter == 2)
+  {
+    lcd.print("C");    
+  }
+
+  if (isMaximum)
+  {
+    lcd.print("A");
+    delay(10);
+    isMaximum = false;
+  }
+}
+
 void goRight()
 {
-  straightCounter = 0 ;
+  straightCounter = 0;
   // Tilt robot towards right by stopping the right wheel and moving the left one
   digitalWrite(rightMotorPin1, LOW);
   digitalWrite(rightMotorPin2, HIGH);
@@ -158,11 +158,14 @@ void goRight()
   analogWrite(enRight, 150);
 
 }
+
 void goLeft()
 {
   if (straightCounter == max && crossCounter == 0)    
-  lcd.println("A") ;
-  straightCounter = 0 ;
+  {
+    isMaximum = true;
+    straightCounter = 0;
+  }
   // Tilt robot towards left by stopping the left wheel and moving the right one
   digitalWrite(rightMotorPin1, HIGH);
   digitalWrite(rightMotorPin2, LOW);
@@ -170,14 +173,11 @@ void goLeft()
   digitalWrite(leftMotorPin2, HIGH);
   analogWrite(enLeft, 100);
   analogWrite(enRight, 255);
-
 }
+
 void goForward()
 {
-  straightCounter++;
-  delay(10);
-  if (straightCounter >= max)
-  max = straightCounter ;
+  countStraight();
   // Move both the Motors
   digitalWrite(rightMotorPin1, HIGH);
   digitalWrite(rightMotorPin2, LOW);
@@ -195,5 +195,33 @@ void stop()
   digitalWrite(leftMotorPin2, LOW);
   analogWrite(enLeft, 0);
   analogWrite(enRight, 0);
+}
 
+void moveTheRobot()
+{
+  if (sensingRight)
+  {
+    lcd.print("RIGHT");
+    goRight();
+  }
+
+  else if (sensingLeft)
+  {
+    lcd.print("LEFT");
+    goLeft();  
+  }
+
+  else if (sensingStraight)
+  {
+    lcd.print("STRAIGHT");
+    goForward();
+  }
+
+  else if (sensingNothing)
+  {
+    lcd.print("END");
+    lcd.setCursor(13, 1);
+    lcd.print("D");
+    stop();
+  }
 }
