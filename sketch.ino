@@ -17,6 +17,8 @@ int enRight = 7;
 
 int power = 10;
 // counters
+int max = 0 ;
+int straightCounter = 0 ;
 int crossCounter = 0;
 int gapCounter = 0;
 // 
@@ -146,6 +148,7 @@ boolean gap()
 
 void goRight()
 {
+  straightCounter = 0 ;
   // Tilt robot towards right by stopping the right wheel and moving the left one
   digitalWrite(rightMotorPin1, LOW);
   digitalWrite(rightMotorPin2, HIGH);
@@ -157,6 +160,9 @@ void goRight()
 }
 void goLeft()
 {
+  if (straightCounter == max && crossCounter == 0)    
+  lcd.println("A") ;
+  straightCounter = 0 ;
   // Tilt robot towards left by stopping the left wheel and moving the right one
   digitalWrite(rightMotorPin1, HIGH);
   digitalWrite(rightMotorPin2, LOW);
@@ -168,6 +174,10 @@ void goLeft()
 }
 void goForward()
 {
+  straightCounter++;
+  delay(10);
+  if (straightCounter >= max)
+  max = straightCounter ;
   // Move both the Motors
   digitalWrite(rightMotorPin1, HIGH);
   digitalWrite(rightMotorPin2, LOW);
