@@ -24,7 +24,7 @@ int ground;
 int line;
 // for badge A
 bool isMaximum = false;
-// for badge B
+// for badge D
 bool ended = false;
 
 void setup()
