@@ -20,8 +20,7 @@
                 "/workspaces/line-follower-robot/arduino-1.8.19/libraries/LiquidCrystal/src",
                 "/workspaces/line-follower-robot/arduino-1.8.19/hardware/tools/avr/lib/gcc/avr/7.3.0/include",
                 "/workspaces/line-follower-robot/arduino-1.8.19/hardware/tools/avr/lib/gcc/avr/7.3.0/include-fixed",
-                "/workspaces/line-follower-robot/arduino-1.8.19/hardware/tools/avr/avr/include",
-                "${workspaceFolder}"
+                "/workspaces/line-follower-robot/arduino-1.8.19/hardware/tools/avr/avr/include"
             ],
             "forcedInclude": [
                 "/workspaces/line-follower-robot/arduino-1.8.19/hardware/arduino/avr/cores/arduino/Arduino.h"
