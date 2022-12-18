@@ -3,7 +3,7 @@
 #include <movment.h>
 #include <counters.h>
 #include <print.h>
-
+#include <direction.h>
 void setup()
 {
   lcd.begin(16, 2);
