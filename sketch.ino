@@ -64,42 +64,6 @@ void loop()
   moveTheRobot();
 }
 
-boolean sensingNothing()
-{
-  // stop when both sensors read ground
-  return digitalRead(irFront) == ground && digitalRead(irBehind) == ground;
-}
-
-boolean sensingLeft()
-{
-  // move left when left sensor read line 
-  return digitalRead(irRight) == ground && digitalRead(irLeft) == line;
-}
-
-boolean sensingRight()
-{
-  // move right when right sensor read line
-  return digitalRead(irRight) == line && digitalRead(irLeft) == ground;
-}
-
-boolean sensingStraight()
-{
-  // move forward when either of sensors read line
-  return digitalRead(irFront) == line || digitalRead(irBehind) == line ;
-}
-
-boolean cross()
-{
-  // return true when all sesnors read line (a cross found)
-  return digitalRead(irRight) == line && digitalRead(irLeft) == line && digitalRead(irFront) == line;
-}
-
-boolean gap()
-{
-  // return ture when all sensors read ground (a gap found)
-  return digitalRead(irRight) == ground && digitalRead(irLeft) == ground && digitalRead(irFront) == ground;
-}
-
 void countCross()
 {
   if (cross)
@@ -108,6 +72,13 @@ void countCross()
     delay(100); //changeable
   }
 }
+
+bool cross()
+{
+  // return true when all sesnors read line (a cross found)
+  return digitalRead(irRight) == line && digitalRead(irLeft) == line && digitalRead(irFront) == line;
+}
+
 
 void countGap()
 {
@@ -118,15 +89,12 @@ void countGap()
   }
 }
 
-void countStraight()
+bool gap()
 {
-  straightCounter++;
-  delay(10);
-  if (straightCounter >= max)
-  {
-    max = straightCounter ;
-  }
+  // return ture when all sensors read ground (a gap found)
+  return digitalRead(irRight) == ground && digitalRead(irLeft) == ground && digitalRead(irFront) == ground;
 }
+
 
 void printBadges()
 {
@@ -152,56 +120,7 @@ void printBadges()
   }
 }
 
-void goRight()
-{
-  straightCounter = 0;
-  // Tilt robot towards right by stopping the right wheel and moving the left one
-  digitalWrite(rightMotorPin1, LOW);
-  digitalWrite(rightMotorPin2, HIGH);
-  digitalWrite(leftMotorPin1, HIGH);
-  digitalWrite(leftMotorPin2, LOW);
-  analogWrite(enLeft, 255);
-  analogWrite(enRight, 150);
 
-}
-
-void goLeft()
-{
-  if (straightCounter == max && crossCounter == 0)    
-  {
-    isMaximum = true;
-    straightCounter = 0;
-  }
-  // Tilt robot towards left by stopping the left wheel and moving the right one
-  digitalWrite(rightMotorPin1, HIGH);
-  digitalWrite(rightMotorPin2, LOW);
-  digitalWrite(leftMotorPin1, LOW);
-  digitalWrite(leftMotorPin2, HIGH);
-  analogWrite(enLeft, 100);
-  analogWrite(enRight, 255);
-}
-
-void goForward()
-{
-  countStraight();
-  // Move both the Motors
-  digitalWrite(rightMotorPin1, HIGH);
-  digitalWrite(rightMotorPin2, LOW);
-  digitalWrite(leftMotorPin1, HIGH);
-  digitalWrite(leftMotorPin2, LOW);
-  analogWrite(enLeft, 255);
-  analogWrite(enRight, 255);
-}
-void stop()
-{
-  // Stop both the motors
-  digitalWrite(rightMotorPin1, LOW);
-  digitalWrite(rightMotorPin2, LOW);
-  digitalWrite(leftMotorPin1, LOW);
-  digitalWrite(leftMotorPin2, LOW);
-  analogWrite(enLeft, 0);
-  analogWrite(enRight, 0);
-}
 
 void moveTheRobot()
 {
@@ -229,3 +148,95 @@ void moveTheRobot()
     stop();
   }
 }
+
+bool sensingRight()
+{
+  // move right when right sensor read line
+  return digitalRead(irRight) == line && digitalRead(irLeft) == ground;
+}
+
+void goRight()
+{
+  straightCounter = 0;
+  // Tilt robot towards right by stopping the right wheel and moving the left one
+  digitalWrite(rightMotorPin1, LOW);
+  digitalWrite(rightMotorPin2, HIGH);
+  digitalWrite(leftMotorPin1, HIGH);
+  digitalWrite(leftMotorPin2, LOW);
+  analogWrite(enLeft, 255);
+  analogWrite(enRight, 150);
+
+}
+
+
+bool sensingLeft()
+{
+  // move left when left sensor read line 
+  return digitalRead(irRight) == ground && digitalRead(irLeft) == line;
+}
+
+void goLeft()
+{
+  if (straightCounter == max && crossCounter == 0)    
+  {
+    isMaximum = true;
+    straightCounter = 0;
+  }
+  // Tilt robot towards left by stopping the left wheel and moving the right one
+  digitalWrite(rightMotorPin1, HIGH);
+  digitalWrite(rightMotorPin2, LOW);
+  digitalWrite(leftMotorPin1, LOW);
+  digitalWrite(leftMotorPin2, HIGH);
+  analogWrite(enLeft, 100);
+  analogWrite(enRight, 255);
+}
+
+
+bool sensingStraight()
+{
+  // move forward when either of sensors read line
+  return digitalRead(irFront) == line || digitalRead(irBehind) == line ;
+}
+
+void goForward()
+{
+  countStraight();
+  // Move both the Motors
+  digitalWrite(rightMotorPin1, HIGH);
+  digitalWrite(rightMotorPin2, LOW);
+  digitalWrite(leftMotorPin1, HIGH);
+  digitalWrite(leftMotorPin2, LOW);
+  analogWrite(enLeft, 255);
+  analogWrite(enRight, 255);
+}
+
+void countStraight()
+{
+  straightCounter++;
+  delay(10);
+  if (straightCounter >= max)
+  {
+    max = straightCounter ;
+  }
+}
+
+
+bool sensingNothing()
+{
+  // stop when both sensors read ground
+  return digitalRead(irFront) == ground && digitalRead(irBehind) == ground;
+}
+
+void stop()
+{
+  // Stop both the motors
+  digitalWrite(rightMotorPin1, LOW);
+  digitalWrite(rightMotorPin2, LOW);
+  digitalWrite(leftMotorPin1, LOW);
+  digitalWrite(leftMotorPin2, LOW);
+  analogWrite(enLeft, 0);
+  analogWrite(enRight, 0);
+}
+
+
+
