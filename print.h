@@ -21,3 +21,4 @@ void printBadges()
     lcd.setCursor(13, 1);
     lcd.print("D");
   }
+}
