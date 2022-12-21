@@ -20,55 +20,48 @@ int straightCounter = 0 ;
 int crossCounter = 0;
 int gapCounter = 0;
 // instead of HIGH and LOW
-int ground;
-int line;
+int ground = 0x1;
+int line = 0x0;
 // for badge A
 bool isMaximum = false;
 // for badge D
 bool ended = false;
 
-bool cross()
-{
-  // return true when all sesnors read line (a cross found)
-  return digitalRead(irRight) == line && digitalRead(irLeft) == line && digitalRead(irFront) == line;
-}
-
-bool gap()
-{
-  // return ture when all sensors read ground (a gap found)
-  return digitalRead(irRight) == ground && digitalRead(irLeft) == ground && digitalRead(irFront) == ground;
-}
-
 void countCross()
 {
-  if (cross)
+  if (digitalRead(irRight) == line && digitalRead(irLeft) == line && digitalRead(irFront) == line && digitalRead(irBehind) == line)
   {
     crossCounter++;
-    delay(100); //changeable
+    delay(62);
   }
 }
 
 void countStraight()
 {
   straightCounter++;
-  delay(10);
+  delay(62);
   if (straightCounter >= max)
   {
-    max = straightCounter ;
+    max = straightCounter;
   }
 }
 
 void countGap()
 {
-  if (gap)
+  if (digitalRead(irRight) == ground && digitalRead(irLeft) == ground && digitalRead(irFront) == ground && digitalRead(irBehind) == line)
   {
     gapCounter++;
-    delay(100); //changeable
+    delay(62);
   }
 }
 
 void printBadges()
 {
+  if (isMaximum)
+  {
+    lcd.print("A");
+  }
+  
   if (crossCounter == 5)
   {
     isMaximum = false;
@@ -80,11 +73,6 @@ void printBadges()
     lcd.print("C");    
   }
 
-  if (isMaximum)
-  {
-    lcd.print("A");
-  }
-
   if (ended)
   {
     lcd.print("D");
@@ -94,25 +82,25 @@ void printBadges()
 bool sensingRight()
 {
   // move right when right sensor read line
-  return digitalRead(irRight) == line && digitalRead(irLeft) == ground;
+  return digitalRead(irLeft) == ground && digitalRead(irRight) == line;
 }
 
 bool sensingLeft()
 {
   // move left when left sensor read line 
-  return digitalRead(irRight) == ground && digitalRead(irLeft) == line;
+  return digitalRead(irLeft) == line && digitalRead(irRight) == ground;
 }
 
 bool sensingStraight()
 {
   // move forward when either of sensors read line
-  return digitalRead(irFront) == line || digitalRead(irBehind) == line ;
+  return (digitalRead(irFront) == line && digitalRead(irLeft) == ground && digitalRead(irRight) == ground) || (digitalRead(irFront) == line && digitalRead(irLeft) == line && digitalRead(irRight) == line && digitalRead(irBehind) == line) || (digitalRead(irFront) == ground && digitalRead(irLeft) == ground && digitalRead(irRight) == ground && digitalRead(irBehind) == line);
 }
 
 bool sensingNothing()
 {
   // stop when both sensors read ground
-  return digitalRead(irFront) == ground && digitalRead(irBehind) == ground;
+  return digitalRead(irFront) == ground && digitalRead(irLeft) == ground && digitalRead(irRight) == ground && digitalRead(irBehind) == ground;
 }
 
 void goRight()
@@ -123,9 +111,9 @@ void goRight()
   digitalWrite(rightMotorPin2, HIGH);
   digitalWrite(leftMotorPin1, HIGH);
   digitalWrite(leftMotorPin2, LOW);
-  analogWrite(enLeft, 255);
-  analogWrite(enRight, 150);
-
+  analogWrite(enLeft, 150);
+  analogWrite(enRight, 100);
+  delay(50);
 }
 
 void goLeft()
@@ -141,7 +129,8 @@ void goLeft()
   digitalWrite(leftMotorPin1, LOW);
   digitalWrite(leftMotorPin2, HIGH);
   analogWrite(enLeft, 100);
-  analogWrite(enRight, 255);
+  analogWrite(enRight, 150);
+  delay(50);
 }
 
 void goForward()
@@ -152,13 +141,14 @@ void goForward()
   digitalWrite(rightMotorPin2, LOW);
   digitalWrite(leftMotorPin1, HIGH);
   digitalWrite(leftMotorPin2, LOW);
-  analogWrite(enLeft, 255);
-  analogWrite(enRight, 255);
+  analogWrite(enLeft, 200);
+  analogWrite(enRight, 200);
 }
 
 void stop()
 {
   // Stop both the motors
+  ended = true;
   digitalWrite(rightMotorPin1, LOW);
   digitalWrite(rightMotorPin2, LOW);
   digitalWrite(leftMotorPin1, LOW);
@@ -169,25 +159,25 @@ void stop()
 
 void moveTheRobot()
 {
-  if (sensingRight)
-  {
-    lcd.print("RIGHT");
-    goRight();
-  }
-
-  else if (sensingLeft)
-  {
-    lcd.print("LEFT");
-    goLeft();  
-  }
-
-  else if (sensingStraight)
+  if (sensingStraight())
   {
     lcd.print("STRAIGHT");
     goForward();
   }
 
-  else if (sensingNothing)
+  else if (sensingLeft())
+  {
+    lcd.print("LEFT");
+    goLeft();  
+  }
+
+  else if (sensingRight())
+  {
+    lcd.print("RIGHT");
+    goRight();
+  }
+
+  else if (sensingNothing())
   {
     lcd.print("END");
     stop();
