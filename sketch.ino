@@ -18,8 +18,8 @@ void setup()
   pinMode(irFront, INPUT);
   pinMode(irBehind, INPUT);  
   // auto detect ground
-  ground = digitalRead(irLeft);
-  line = !ground;
+  // ground = digitalRead(irLeft);
+  // line = !ground;
 }
 
 void loop()
@@ -36,4 +36,5 @@ void loop()
   // movement
   lcd.setCursor(3, 1);
   moveTheRobot();
+  delay(100);
 }
